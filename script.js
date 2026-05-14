@@ -41,6 +41,67 @@ const exploreStates = {
 };
 
 function drawBuildGraph(stage) {
+  // Graph coordinate system parameters
+  const graphParams = {
+    xMin: 8,    // Minimum quantity
+    xMax: 12,   // Maximum quantity
+    yMin: 0,    // Minimum price
+    yMax: 2,    // Maximum price
+    svgXMin: 90,  // SVG left margin
+    svgXMax: 560, // SVG right edge
+    svgYMin: 55,  // SVG top (high price)
+    svgYMax: 315, // SVG bottom (low price)
+  };
+
+  // Coordinate transformation functions
+  function graphToSvgX(q) {
+    const xRange = graphParams.xMax - graphParams.xMin;
+    const svgXRange = graphParams.svgXMax - graphParams.svgXMin;
+    return graphParams.svgXMin + ((q - graphParams.xMin) / xRange) * svgXRange;
+  }
+
+  function graphToSvgY(p) {
+    const yRange = graphParams.yMax - graphParams.yMin;
+    const svgYRange = graphParams.svgYMax - graphParams.svgYMin;
+    // SVG Y increases downward, so invert: high price = low Y
+    return graphParams.svgYMax - ((p - graphParams.yMin) / yRange) * svgYRange;
+  }
+
+  // Economic model: linear curves intersecting at equilibrium
+  const equilibriumQ = 10;
+  const equilibriumP = 1;
+
+  // Demand: P = 6 - 0.5Q (at Q=8, P=2; at Q=12, P=0)
+  // Supply: P = -4 + 0.5Q (at Q=8, P=0; at Q=12, P=2)
+  const demandStartQ = 8, demandStartP = 6 - 0.5 * demandStartQ;
+  const demandEndQ = 12, demandEndP = 6 - 0.5 * demandEndQ;
+  const supplyStartQ = 8, supplyStartP = -4 + 0.5 * supplyStartQ;
+  const supplyEndQ = 12, supplyEndP = -4 + 0.5 * supplyEndQ;
+
+  // Transform to SVG coordinates
+  const demandStartX = graphToSvgX(demandStartQ);
+  const demandStartY = graphToSvgY(demandStartP);
+  const demandEndX = graphToSvgX(demandEndQ);
+  const demandEndY = graphToSvgY(demandEndP);
+
+  const supplyStartX = graphToSvgX(supplyStartQ);
+  const supplyStartY = graphToSvgY(supplyStartP);
+  const supplyEndX = graphToSvgX(supplyEndQ);
+  const supplyEndY = graphToSvgY(supplyEndP);
+
+  const eqX = graphToSvgX(equilibriumQ);
+  const eqY = graphToSvgY(equilibriumP);
+
+  // Debug logs
+  console.log('=== Build Graph Debug ===');
+  console.log('Graph params:', graphParams);
+  console.log('Equilibrium (graph coords):', { q: equilibriumQ, p: equilibriumP });
+  console.log('Equilibrium (SVG coords):', { x: eqX, y: eqY });
+  console.log('Demand start (graph):', { q: demandStartQ, p: demandStartP }, 'SVG:', { x: demandStartX, y: demandStartY });
+  console.log('Demand end (graph):', { q: demandEndQ, p: demandEndP }, 'SVG:', { x: demandEndX, y: demandEndY });
+  console.log('Supply start (graph):', { q: supplyStartQ, p: supplyStartP }, 'SVG:', { x: supplyStartX, y: supplyStartY });
+  console.log('Supply end (graph):', { q: supplyEndQ, p: supplyEndP }, 'SVG:', { x: supplyEndX, y: supplyEndY });
+
   const buildGraphPanel = document.getElementById('build-graph-panel');
   buildGraphPanel.innerHTML = `
     <svg viewBox="0 0 620 360" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
@@ -52,14 +113,14 @@ function drawBuildGraph(stage) {
       <!-- Axis labels -->
       <text x="60" y="35" fill="#4f5f72" font-size="16" font-weight="600">P</text>
       <text x="565" y="330" fill="#4f5f72" font-size="16" font-weight="600">Q</text>
-      
+
       <!-- Y-axis tick labels (0, 0.5, 1, 1.5, 2) -->
       <text x="75" y="315" fill="#6b7280" font-size="12" text-anchor="end">0</text>
       <text x="75" y="245" fill="#6b7280" font-size="12" text-anchor="end">0.5</text>
       <text x="75" y="185" fill="#6b7280" font-size="12" text-anchor="end">1</text>
       <text x="75" y="115" fill="#6b7280" font-size="12" text-anchor="end">1.5</text>
       <text x="75" y="55" fill="#6b7280" font-size="12" text-anchor="end">2</text>
-      
+
       <!-- X-axis tick labels (8, 9, 10, 11, 12) with break indicator -->
       <text x="90" y="325" fill="#6b7280" font-size="10" text-anchor="middle">···</text>
       <text x="90" y="345" fill="#6b7280" font-size="12" text-anchor="middle">8</text>
@@ -67,14 +128,12 @@ function drawBuildGraph(stage) {
       <text x="325" y="345" fill="#6b7280" font-size="12" text-anchor="middle">10</text>
       <text x="442" y="345" fill="#6b7280" font-size="12" text-anchor="middle">11</text>
       <text x="560" y="345" fill="#6b7280" font-size="12" text-anchor="middle">12</text>
-      
-      ${stage >= 1 ? '<line x1="90" y1="80" x2="560" y2="285" stroke="#fb5353" stroke-width="5" stroke-linecap="round" /><text x="110" y="70" fill="#fb5353" font-size="14" font-weight="600">Demand</text>' : ''}
-      ${stage >= 2 ? '<line x1="90" y1="285" x2="560" y2="50" stroke="#2f80ed" stroke-width="5" stroke-linecap="round" /><text x="440" y="60" fill="#2f80ed" font-size="14" font-weight="600">Supply</text>' : ''}
-      ${stage >= 3 ? '<circle cx="325" cy="180" r="14" fill="#20c997" stroke="#fff" stroke-width="4" /><text x="340" y="185" fill="#154d3d" font-size="15" font-weight="600">E</text>' : ''}
-      ${stage >= 3 ? '<line x1="325" y1="180" x2="325" y2="310" stroke="#20c997" stroke-dasharray="6 4" stroke-width="2" opacity="0.6" />' : ''}
-      ${stage >= 3 ? '<line x1="325" y1="180" x2="90" y2="180" stroke="#20c997" stroke-dasharray="6 4" stroke-width="2" opacity="0.6" />' : ''}
-      ${stage >= 4 ? '<text x="350" y="175" fill="#20c997" font-size="16" font-weight="700">P = $1.00</text>' : ''}
-      ${stage >= 5 ? '<text x="330" y="330" fill="#20c997" font-size="16" font-weight="700">Q = 10</text>' : ''}
+
+      ${stage >= 1 ? `<line x1="${demandStartX}" y1="${demandStartY}" x2="${demandEndX}" y2="${demandEndY}" stroke="#fb5353" stroke-width="5" stroke-linecap="round" /><text x="110" y="70" fill="#fb5353" font-size="14" font-weight="600">Demand</text>` : ''}
+      ${stage >= 2 ? `<line x1="${supplyStartX}" y1="${supplyStartY}" x2="${supplyEndX}" y2="${supplyEndY}" stroke="#2f80ed" stroke-width="5" stroke-linecap="round" /><text x="440" y="60" fill="#2f80ed" font-size="14" font-weight="600">Supply</text>` : ''}
+      ${stage >= 3 ? `<circle cx="${eqX}" cy="${eqY}" r="14" fill="#20c997" stroke="#fff" stroke-width="4" /><text x="${eqX + 15}" y="${eqY + 5}" fill="#154d3d" font-size="15" font-weight="600">E</text><line x1="${eqX}" y1="${eqY}" x2="${eqX}" y2="310" stroke="#20c997" stroke-dasharray="6 4" stroke-width="2" opacity="0.6" /><line x1="${eqX}" y1="${eqY}" x2="90" y2="${eqY}" stroke="#20c997" stroke-dasharray="6 4" stroke-width="2" opacity="0.6" />` : ''}
+      ${stage >= 4 ? `<text x="${eqX + 25}" y="${eqY - 10}" fill="#20c997" font-size="16" font-weight="700">P = $1.00</text>` : ''}
+      ${stage >= 5 ? `<text x="${eqX + 5}" y="330" fill="#20c997" font-size="16" font-weight="700">Q = 10</text>` : ''}
     </svg>
   `;
 }
