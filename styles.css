@@ -1,0 +1,267 @@
+:root {
+  --bg: #f7f9fb;
+  --panel: #ffffff;
+  --text: #222831;
+  --muted: #5f6b73;
+  --primary: #2f80ed;
+  --accent: #fb5353;
+  --border: #d8e0ea;
+  --shadow: 0 18px 40px rgba(66, 84, 105, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: radial-gradient(circle at top, #edf3ff 0%, var(--bg) 55%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.page-shell {
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 64px;
+}
+
+.chapter-header {
+  max-width: 840px;
+  margin-bottom: 32px;
+  padding: 28px 30px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(34, 40, 49, 0.08);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+}
+
+.chapter-label {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.chapter-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3.2vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.chapter-intro {
+  margin: 18px 0 0;
+  max-width: 720px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.interactive-panel {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.feature-button,
+.action-button,
+.price-button {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: #fff;
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.feature-button {
+  flex: 1;
+  min-width: 120px;
+}
+
+.feature-button:hover,
+.action-button:hover,
+.price-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary);
+}
+
+.feature-button.active {
+  background: linear-gradient(180deg, #d8e7ff 0%, #eef5ff 100%);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.panel-main {
+  display: grid;
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+}
+
+.feature-pane {
+  display: none;
+  gap: 18px;
+}
+
+.feature-pane.active {
+  display: grid;
+}
+
+.feature-pane h3 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+.image-card {
+  padding: 18px;
+  background: #f4f8fe;
+  border-radius: 20px;
+  border: 1px solid rgba(47, 128, 237, 0.15);
+}
+
+.image-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.figure-caption,
+.animation-note,
+.build-text,
+.explore-summary {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.build-text {
+  font-weight: 700;
+}
+
+.animation-stage,
+.graph-panel {
+  min-height: 340px;
+  border-radius: 24px;
+  background: #f7faff;
+  border: 1px solid rgba(47, 128, 237, 0.12);
+  padding: 18px;
+  display: grid;
+  place-items: center;
+}
+
+.animation-graph {
+  position: relative;
+  width: min(620px, 100%);
+  height: 300px;
+  background: linear-gradient(180deg, #ffffff 0%, #e9f1ff 100%);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.stationary-supply,
+.moving-demand,
+.equilibrium-marker {
+  position: absolute;
+  border-radius: 999px;
+}
+
+.stationary-supply {
+  width: 300px;
+  height: 5px;
+  background: #2f80ed;
+  left: 15%;
+  top: 65%;
+  transform: rotate(65deg);
+}
+
+.moving-demand {
+  width: 300px;
+  height: 5px;
+  background: #fb5353;
+  left: 12%;
+  top: 25%;
+  transform: rotate(-65deg);
+  animation: shiftDemand 3.5s ease-in-out infinite alternate;
+}
+
+.equilibrium-marker {
+  width: 18px;
+  height: 18px;
+  background: #20c997;
+  border: 3px solid #ffffff;
+  left: 42%;
+  top: 50%;
+}
+
+@keyframes shiftDemand {
+  from {
+    transform: rotate(-65deg) translateX(0px);
+  }
+  to {
+    transform: rotate(-65deg) translateX(80px);
+  }
+}
+
+.build-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  width: auto;
+  min-width: 160px;
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.price-button {
+  border-color: rgba(47, 128, 237, 0.2);
+  background: #fff;
+}
+
+.price-button.active {
+  background: #2f80ed;
+  color: #fff;
+  border-color: #2f80ed;
+}
+
+.explore-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+
+
+@media (max-width: 620px) {
+  .panel-main,
+  .panel-buttons,
+  .chapter-header {
+    padding: 20px;
+  }
+
+  .feature-button,
+  .action-button,
+  .price-button {
+    padding: 12px 14px;
+  }
+}

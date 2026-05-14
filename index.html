@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Econ Textbook — Chapter 1</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page-shell">
+    <header class="chapter-header">
+      <div>
+        <span class="chapter-label">Chapter 1</span>
+        <h1>Market Equilibrium</h1>
+      </div>
+      <p class="chapter-intro">
+        Learn how supply and demand interact to establish market equilibrium. Use the panel below to view the textbook graph, watch an animation, build the curve step-by-step, and explore surplus and shortage.
+      </p>
+    </header>
+
+    <section class="interactive-panel">
+      <div class="panel-main" id="feature-content">
+        <section id="book-view" class="feature-pane active" role="tabpanel">
+          <h3>Book View</h3>
+          <p>Here’s the classic supply and demand graph illustrated in the textbook.</p>
+          <div class="image-card">
+            <img src="assets/book-graph.svg" alt="Supply and demand graph" />
+          </div>
+          <p class="figure-caption">Figure 1.1: Supply and demand curves intersect at market equilibrium.</p>
+        </section>
+
+        <section id="animate-view" class="feature-pane" role="tabpanel">
+          <h3>Animate</h3>
+          <p>Watch how supply and demand move together to create an equilibrium price.</p>
+          <div class="animation-stage" id="animation-stage">
+            <div class="animation-graph">
+              <div class="moving-demand"></div>
+              <div class="stationary-supply"></div>
+              <div class="equilibrium-marker"></div>
+            </div>
+          </div>
+          <p class="animation-note">The curves animate to show how a shift in demand changes the equilibrium price and quantity.</p>
+        </section>
+
+        <section id="build-view" class="feature-pane" role="tabpanel">
+          <h3>Build</h3>
+          <p>Click "Next Step" to add each part of the market equilibrium graph.</p>
+          <div class="build-controls">
+            <button id="build-next" class="action-button">Next Step</button>
+            <span id="build-step-label">Step 1 of 6</span>
+          </div>
+          <p id="build-step-text" class="build-text">Start with the market axes.</p>
+          <div class="graph-panel" id="build-graph-panel"></div>
+        </section>
+
+        <section id="explore-view" class="feature-pane" role="tabpanel">
+          <h3>Explore</h3>
+          <p>Click one of the price markers to see whether the market has surplus, shortage, or equilibrium.</p>
+          <div class="explore-options">
+            <button class="price-button" data-price="high">High Price</button>
+            <button class="price-button" data-price="equilibrium">Equilibrium Price</button>
+            <button class="price-button" data-price="low">Low Price</button>
+          </div>
+          <div class="graph-panel" id="explore-graph-panel"></div>
+          <div class="explore-summary" id="explore-summary">Choose a price to illustrate market surplus or shortage.</div>
+        </section>
+      </div>
+
+      <div class="panel-buttons">
+        <h2>Interactive Features</h2>
+        <div class="button-group" role="tablist" aria-label="Chapter 1 interactive features">
+          <button class="feature-button active" data-feature="book-view">Book View</button>
+          <button class="feature-button" data-feature="animate-view">Animate</button>
+          <button class="feature-button" data-feature="build-view">Build</button>
+          <button class="feature-button" data-feature="explore-view">Explore</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
